@@ -1,5 +1,8 @@
-{
-    "DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
+-- ⚡ Executor Script: Apply All Flags (NoTool) ⚡
+-- Lưu ý: chỉ áp dụng trên client của bạn, không replicate ra server
+
+-- 👉 Dán nguyên nội dung từ link NoTool vào đây
+local flags = { "DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
     "DFFlagDebugSimUseManualTimestepMultiplier": "False",
     "DFFlagSimHumanoidFirstPerson240hz": "True",
     "DFFlagSimStepPhysicsCheckTimeStep": "True",
@@ -77,4 +80,15 @@
     "FIntSmoothMouseSpringFrequencyTenths": "70",
 
     "FStringRemoteAnimationSmoothingStrategy": "Exponential"
+
 }
+
+-- Áp dụng tất cả flag
+for _, f in ipairs(flags) do
+    local name, value = f[1], f[2]
+    pcall(function()
+        setfflag(name, tostring(value))
+    end)
+end
+
+print("✅ All flags applied to client")
