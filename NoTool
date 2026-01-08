@@ -1,8 +1,51 @@
--- ⚡ Executor Script: Apply All Flags (NoTool) ⚡
--- Lưu ý: chỉ áp dụng trên client của bạn, không replicate ra server
+-- ⚡ Executor Script: Mini Menu (Unwalk + FFlag Toggle) ⚡
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
--- 👉 Dán nguyên nội dung từ link NoTool vào đây
-local flags = { "DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
+-- GUI siêu nhỏ gọn
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MiniMenu"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 180, 0, 70)
+Frame.Position = UDim2.new(0, 20, 0, 200)
+Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+Frame.Active = true
+Frame.Draggable = true
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,10)
+
+-- Nút 1: Unwalk
+local UnwalkButton = Instance.new("TextButton", Frame)
+UnwalkButton.Size = UDim2.new(0.5,-10,1,-10)
+UnwalkButton.Position = UDim2.new(0,5,0,5)
+UnwalkButton.Text = "Unwalk"
+UnwalkButton.TextColor3 = Color3.fromRGB(255,255,255)
+UnwalkButton.BackgroundColor3 = Color3.fromRGB(80,20,20)
+UnwalkButton.Font = Enum.Font.SourceSansBold
+UnwalkButton.TextSize = 16
+Instance.new("UICorner", UnwalkButton).CornerRadius = UDim.new(0,8)
+
+-- Nút 2: FFlag Toggle
+local FFlagButton = Instance.new("TextButton", Frame)
+FFlagButton.Size = UDim2.new(0.5,-10,1,-10)
+FFlagButton.Position = UDim2.new(0.5,5,0,5)
+FFlagButton.Text = "FFlag OFF"
+FFlagButton.TextColor3 = Color3.fromRGB(255,255,255)
+FFlagButton.BackgroundColor3 = Color3.fromRGB(20,20,80)
+FFlagButton.Font = Enum.Font.SourceSansBold
+FFlagButton.TextSize = 16
+Instance.new("UICorner", FFlagButton).CornerRadius = UDim.new(0,8)
+
+-- Logic nút 1: Unwalk
+UnwalkButton.MouseButton1Click:Connect(function()
+    -- 👉 Bạn dán loadstring của bạn vào đây
+end)
+
+-- Logic nút 2: FFlag Toggle
+local flags = {
+    --  "DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
     "DFFlagDebugSimUseManualTimestepMultiplier": "False",
     "DFFlagSimHumanoidFirstPerson240hz": "True",
     "DFFlagSimStepPhysicsCheckTimeStep": "True",
@@ -83,12 +126,23 @@ local flags = { "DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
 
 }
 
--- Áp dụng tất cả flag
-for _, f in ipairs(flags) do
-    local name, value = f[1], f[2]
-    pcall(function()
-        setfflag(name, tostring(value))
-    end)
-end
+local enabled = false
 
-print("✅ All flags applied to client")
+FFlagButton.MouseButton1Click:Connect(function()
+    enabled = not enabled
+    if enabled then
+        FFlagButton.Text = "FFlag ON"
+        FFlagButton.BackgroundColor3 = Color3.fromRGB(20,80,20)
+
+        for _, f in ipairs(flags) do
+            local name, value = f[1], f[2]
+            pcall(function()
+                setfflag(name, tostring(value))
+            end)
+        end
+
+    else
+        FFlagButton.Text = "FFlag OFF"
+        FFlagButton.BackgroundColor3 = Color3.fromRGB(20,20,80)
+    end
+end)
