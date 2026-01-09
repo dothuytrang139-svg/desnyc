@@ -40,92 +40,10 @@ Instance.new("UICorner", FFlagButton).CornerRadius = UDim.new(0,8)
 
 -- Logic nút 1: Unwalk
 UnwalkButton.MouseButton1Click:Connect(function()
-    -- 👉 Bạn dán loadstring của bạn vào đây
+    -- 👉 Bạn dán loadstring riêng của bạn vào đây
 end)
 
 -- Logic nút 2: FFlag Toggle
-local flags = {
-    --  {"DFFlagSimAdaptiveAdjustTimestepForControllerManager": "False",
-{"DFFlagDebugSimUseManualTimestepMultiplier": "False",
-{"DFFlagSimHumanoidFirstPerson240hz": "True",
-{"DFFlagSimStepPhysicsCheckTimeStep": "True",
-{"DFFlagAnimatorEnableNewAdornments": "True",
-{"DFFlagEnableControlRigIkTargets": "True",
-{"DFFlagIkControlEnableAutopole": "True",
-{"DFFlagIkTwoBoneBetterSolver": "True",
-{"DFFlagAnimatorPostProcessIK": "True",
-{"DFFlagDebugPerfMode": "True",
-
-{"DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou1": "1073741823",
-{"DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou2": "2147483646",
-{"DFIntGameNetPVHeaderRotationOrientIdToleranceExponent": "-2147483647",
-{"DFIntTimestepArbiterVelocityCriteriaThresholdFourDt": "1073741823",
-{"DFIntGameNetPVHeaderRotationalVelocityZeroCutoffExponent": "-5000",
-{"DFIntTimestepArbiterVelocityCriteriaThresholdTwoDt": "2147483646",
-{"DFIntAnimatorRetargetInterpolateFKCorrectionMaxAngleDeg": "360",
-{"DFIntTimestepArbiterAngAccelerationThresholdThou": "1073741823",
-{"DFIntGameNetPVHeaderLinearVelocityZeroCutoffExponent": "-5000",
-{"DFIntAnimatorRetargetInterpolateFKCorrectionMinAngleDeg": "0",
-{"DFIntSimAdaptiveHumanoidPDControllerSubstepMultiplier": "150",
-{"DFIntDataSenderMaxJoinBandwidthBpsMultiplier": "2147483647",
-{"DFIntGameNetPVHeaderTranslationZeroCutoffExponent": "-5000",
-{"DFIntTimestepArbiterCharacteristicLengthThou": "1073741823",
-{"DFIntGameNetDontSendRedundantDeltaThresholdMillionth": "1",
-{"DFIntInterpolationFrameRotVelocityThresholdMillionth": "0",
-{"DFIntSimExplicitlyCappedTimestepMultiplier": "2147483646",
-{"DFIntTimestepArbiterConditionNumberThresholdThou": "1000",
-{"DFIntGameNetDontSendRedundantDeltaPositionMillionth": "1",
-{"DFIntTimestepArbiterAccelerationModelFactorThou": "1000",
-{"DFIntPhysicsEMAInverseSmoothingFactorThrottling": "128",
-{"DFIntDataSenderMaxBandwidthBpsMultiplier": "2147483647",
-{"DFIntInterpolationFramePositionThresholdMillionth": "0",
-{"DFIntInterpolationFrameVelocityThresholdMillionth": "0",
-{"DFIntTimestepArbiterHumanoidTurningVelThreshold": "1",
-{"DFIntTimestepArbiterHumanoidLinearVelThreshold": "1",
-{"DFIntTimestepArbiterThresholdCFLThou": "2147483647",
-{"DFIntDataSenderMaxJoinBandwidthBps": "2147483647",
-{"DFIntSimDefaultHumanoidTimestepMultiplier": "150",
-{"DFIntPhysicsSenderMaxBandwidthBps": "2147483647",
-{"DFIntTimestepArbiterCollidingHumanoidTsm": "150",
-{"DFIntPhysicsSenderMaxBandwidthBpsScaling": "240",
-{"DFIntSimTimestepMultiplierDebounceCount": "2",
-{"DFIntDataSenderMaxBandwidthBps": "2147483647",
-{"DFIntPhysicsEMAInverseSmoothingFactor": "512",
-{"DFIntTimestepArbiterOmegaThou": "1073741823",
-{"DFIntPhysicsNOUCountHundredth": "2147483647",
-{"DFIntGameNetDontSendRedundantNumTimes": "1",
-{"DFIntAngularVelociryLimit": "800000",
-{"DFIntDataSenderRate": "2147483647",
-{"DFIntS2PhysicsSenderRate": "160",
-
-{"FFlagAnimationStreamSourceUseRuntimeSyncPrims": "True",
-{"FFlagAnimationStreamTrackUseRuntimeSyncPrims": "True",
-{"FFlagAnimatorRetargetSkipAnkleModification": "False",
-{"FFlagEnablePhysicsAdaptiveTimeSteppingIXP": "True",
-{"FFlagKeyframeSequenceUseRuntimeSyncPrims": "True",
-{"FFlagHandleAltEnterFullscreenManually": "False",
-{"FFlagHumanoidStateUseRuntimeSyncPrims": "True",
-{"FFlagRealTimeAnimationEnableRefactor": "True",
-{"FFlagRealTimeAnimationUseAudioAPI": "True",
-{"FFlagAvatarUseRuntimeSyncPrims4": "True",
-{"FFlagLiveAnimationUpdateSupport": "True",
-{"FFlagQuaternionPoseCorrection": "True",
-{"FFlagAnimationTrackStepFix": "True",
-{"FFlagEnableAsyncInput": "True",
-{"FFlagDebugDisplayFPS": "True",
-
-{"FIntMaxTimestepMultiplierIntegrationError": "2147483647",
-{"FIntMaxTimestepMultiplierAcceleration": "2147483647",
-{"FIntMaxTimestepMultiplierContstraint": "2147483647",
-{"FIntMaxTimestepMultiplierVelocity": "2147483647",
-{"FIntMaxTimestepMultiplierHumanoid": "2147483647",
-{"FIntMaxTimestepMultiplierBuoyancy": "2147483647",
-{"FIntSmoothMouseSpringFrequencyTenths": "70",
-
-{"FStringRemoteAnimationSmoothingStrategy": "Exponential"
-
-}
-
 local enabled = false
 
 FFlagButton.MouseButton1Click:Connect(function()
@@ -134,15 +52,90 @@ FFlagButton.MouseButton1Click:Connect(function()
         FFlagButton.Text = "FFlag ON"
         FFlagButton.BackgroundColor3 = Color3.fromRGB(20,80,20)
 
-        for _, f in ipairs(flags) do
-            local name, value = f[1], f[2]
-            pcall(function()
-                setfflag(name, tostring(value))
-            end)
-        end
+        setfflag("DFFlagSimAdaptiveAdjustTimestepForControllerManager","False")
+setfflag("DFFlagDebugSimUseManualTimestepMultiplier","False")
+setfflag("DFFlagSimHumanoidFirstPerson240hz","True")
+setfflag("DFFlagSimStepPhysicsCheckTimeStep","True")
+setfflag("DFFlagAnimatorEnableNewAdornments","True")
+setfflag("DFFlagEnableControlRigIkTargets","True")
+setfflag("DFFlagIkControlEnableAutopole","True")
+setfflag("DFFlagIkTwoBoneBetterSolver","True")
+setfflag("DFFlagAnimatorPostProcessIK","True")
+setfflag("DFFlagDebugPerfMode","True")
+
+setfflag("DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou1","1073741823")
+setfflag("DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou2","2147483646")
+setfflag("DFIntGameNetPVHeaderRotationOrientIdToleranceExponent","-2147483647")
+setfflag("DFIntTimestepArbiterVelocityCriteriaThresholdFourDt","1073741823")
+setfflag("DFIntGameNetPVHeaderRotationalVelocityZeroCutoffExponent","-5000")
+setfflag("DFIntTimestepArbiterVelocityCriteriaThresholdTwoDt","2147483646")
+setfflag("DFIntAnimatorRetargetInterpolateFKCorrectionMaxAngleDeg","360")
+setfflag("DFIntTimestepArbiterAngAccelerationThresholdThou","1073741823")
+setfflag("DFIntGameNetPVHeaderLinearVelocityZeroCutoffExponent","-5000")
+setfflag("DFIntAnimatorRetargetInterpolateFKCorrectionMinAngleDeg","0")
+setfflag("DFIntSimAdaptiveHumanoidPDControllerSubstepMultiplier","150")
+setfflag("DFIntDataSenderMaxJoinBandwidthBpsMultiplier","2147483647")
+setfflag("DFIntGameNetPVHeaderTranslationZeroCutoffExponent","-5000")
+setfflag("DFIntTimestepArbiterCharacteristicLengthThou","1073741823")
+setfflag("DFIntGameNetDontSendRedundantDeltaThresholdMillionth","1")
+setfflag("DFIntInterpolationFrameRotVelocityThresholdMillionth","0")
+setfflag("DFIntSimExplicitlyCappedTimestepMultiplier","2147483646")
+setfflag("DFIntTimestepArbiterConditionNumberThresholdThou","1000")
+setfflag("DFIntGameNetDontSendRedundantDeltaPositionMillionth","1")
+setfflag("DFIntTimestepArbiterAccelerationModelFactorThou","1000")
+setfflag("DFIntPhysicsEMAInverseSmoothingFactorThrottling","128")
+setfflag("DFIntDataSenderMaxBandwidthBpsMultiplier","2147483647")
+setfflag("DFIntInterpolationFramePositionThresholdMillionth","0")
+setfflag("DFIntInterpolationFrameVelocityThresholdMillionth","0")
+setfflag("DFIntTimestepArbiterHumanoidTurningVelThreshold","1")
+setfflag("DFIntTimestepArbiterHumanoidLinearVelThreshold","1")
+setfflag("DFIntTimestepArbiterThresholdCFLThou","2147483647")
+setfflag("DFIntDataSenderMaxJoinBandwidthBps","2147483647")
+setfflag("DFIntSimDefaultHumanoidTimestepMultiplier","150")
+setfflag("DFIntPhysicsSenderMaxBandwidthBps","2147483647")
+setfflag("DFIntTimestepArbiterCollidingHumanoidTsm","150")
+setfflag("DFIntPhysicsSenderMaxBandwidthBpsScaling","240")
+setfflag("DFIntSimTimestepMultiplierDebounceCount","2")
+setfflag("DFIntDataSenderMaxBandwidthBps","2147483647")
+setfflag("DFIntPhysicsEMAInverseSmoothingFactor","512")
+setfflag("DFIntTimestepArbiterOmegaThou","1073741823")
+setfflag("DFIntPhysicsNOUCountHundredth","2147483647")
+setfflag("DFIntGameNetDontSendRedundantNumTimes","1")
+setfflag("DFIntAngularVelociryLimit","800000")
+setfflag("DFIntDataSenderRate","2147483647")
+setfflag("DFIntS2PhysicsSenderRate","160")
+
+setfflag("FFlagAnimationStreamSourceUseRuntimeSyncPrims","True")
+setfflag("FFlagAnimationStreamTrackUseRuntimeSyncPrims","True")
+setfflag("FFlagAnimatorRetargetSkipAnkleModification","False")
+setfflag("FFlagEnablePhysicsAdaptiveTimeSteppingIXP","True")
+setfflag("FFlagKeyframeSequenceUseRuntimeSyncPrims","True")
+setfflag("FFlagHandleAltEnterFullscreenManually","False")
+setfflag("FFlagHumanoidStateUseRuntimeSyncPrims","True")
+setfflag("FFlagRealTimeAnimationEnableRefactor","True")
+setfflag("FFlagRealTimeAnimationUseAudioAPI","True")
+setfflag("FFlagAvatarUseRuntimeSyncPrims4","True")
+setfflag("FFlagLiveAnimationUpdateSupport","True")
+setfflag("FFlagQuaternionPoseCorrection","True")
+setfflag("FFlagAnimationTrackStepFix","True")
+setfflag("FFlagEnableAsyncInput","True")
+setfflag("FFlagDebugDisplayFPS","True")
+
+setfflag("FIntMaxTimestepMultiplierIntegrationError","2147483647")
+setfflag("FIntMaxTimestepMultiplierAcceleration","2147483647")
+setfflag("FIntMaxTimestepMultiplierContstraint","2147483647")
+setfflag("FIntMaxTimestepMultiplierVelocity","2147483647")
+setfflag("FIntMaxTimestepMultiplierHumanoid","2147483647")
+setfflag("FIntMaxTimestepMultiplierBuoyancy","2147483647")
+setfflag("FIntSmoothMouseSpringFrequencyTenths","70")
+
+setfflag("FStringRemoteAnimationSmoothingStrategy","Exponential")
+
 
     else
         FFlagButton.Text = "FFlag OFF"
         FFlagButton.BackgroundColor3 = Color3.fromRGB(20,20,80)
+
+        -- 👉 Nếu muốn, bạn có thể reset lại vài flag tại đây
     end
 end)
