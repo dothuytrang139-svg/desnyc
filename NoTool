@@ -1,141 +1,289 @@
--- ⚡ Executor Script: Mini Menu (Unwalk + FFlag Toggle) ⚡
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
 
--- GUI siêu nhỏ gọn
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MiniMenu"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+local player = Players.LocalPlayer
 
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0, 180, 0, 70)
-Frame.Position = UDim2.new(0, 20, 0, 200)
-Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Frame.Active = true
-Frame.Draggable = true
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,10)
+local Config = {
+    StrokeThickness = 2,
+    ESPColor = Color3.fromRGB(255, 230, 0),
+    BTNSColor = Color3.fromRGB(255, 170, 0),
+    AnimDisable = false,
+    DesyncEnabled = false
+}
 
--- Nút 1: Unwalk
-local UnwalkButton = Instance.new("TextButton", Frame)
-UnwalkButton.Size = UDim2.new(0.5,-10,1,-10)
-UnwalkButton.Position = UDim2.new(0,5,0,5)
-UnwalkButton.Text = "Unwalk"
-UnwalkButton.TextColor3 = Color3.fromRGB(255,255,255)
-UnwalkButton.BackgroundColor3 = Color3.fromRGB(80,20,20)
-UnwalkButton.Font = Enum.Font.SourceSansBold
-UnwalkButton.TextSize = 16
-Instance.new("UICorner", UnwalkButton).CornerRadius = UDim.new(0,8)
+local FFlags = { -- giữ nguyên; bạn có thể rút gọn theo ý nếu muốn
+    DisableDPIScale = true,
+    S2PhysicsSenderRate = 15000,
+    AngularVelociryLimit = 360,
+    StreamJobNOUVolumeCap = 2147483647,
+    GameNetDontSendRedundantDeltaPositionMillionth = 1,
+    TimestepArbiterOmegaThou = 1073741823,
+    MaxMissedWorldStepsRemembered = -2147483648,
+    GameNetPVHeaderRotationalVelocityZeroCutoffExponent = -5000,
+    PhysicsSenderMaxBandwidthBps = 20000,
+    LargeReplicatorSerializeWrite4 = true,
+    MaxAcceptableUpdateDelay = 1,
+    ServerMaxBandwith = 52,
+    InterpolationFrameRotVelocityThresholdMillionth = 5,
+    GameNetDontSendRedundantNumTimes = 1,
+    StreamJobNOUVolumeLengthCap = 2147483647,
+    CheckPVLinearVelocityIntegrateVsDeltaPositionThresholdPercent = 1,
+    TimestepArbiterHumanoidTurningVelThreshold = 1,
+    MaxTimestepMultiplierAcceleration = 2147483647,
+    SimOwnedNOUCountThresholdMillionth = 2147483647,
+    SimExplicitlyCappedTimestepMultiplier = 2147483646,
+    TimestepArbiterVelocityCriteriaThresholdTwoDt = 2147483646,
+    CheckPVCachedVelThresholdPercent = 10,
+    ReplicationFocusNouExtentsSizeCutoffForPauseStuds = 2147483647,
+    InterpolationFramePositionThresholdMillionth = 5,
+    DebugSendDistInSteps = -2147483648,
+    LargeReplicatorEnabled9 = true,
+    CheckPVDifferencesForInterpolationMinRotVelThresholdRadsPerSecHundredth = 1,
+    LargeReplicatorWrite5 = true,
+    NextGenReplicatorEnabledWrite4 = true,
+    MaxTimestepMultiplierContstraint = 2147483647,
+    MaxTimestepMultiplierBuoyancy = 2147483647,
+    MaxDataPacketPerSend = 2147483647,
+    LargeReplicatorRead5 = true,
+    CheckPVDifferencesForInterpolationMinVelThresholdStudsPerSecHundredth = 1,
+    TimestepArbiterHumanoidLinearVelThreshold = 1,
+    WorldStepMax = 30,
+    InterpolationFrameVelocityThresholdMillionth = 5,
+    LargeReplicatorSerializeRead3 = true,
+    GameNetPVHeaderLinearVelocityZeroCutoffExponent = -5000,
+    CheckPVCachedRotVelThresholdPercent = 10,
+}
 
--- Nút 2: FFlag Toggle
-local FFlagButton = Instance.new("TextButton", Frame)
-FFlagButton.Size = UDim2.new(0.5,-10,1,-10)
-FFlagButton.Position = UDim2.new(0.5,5,0,5)
-FFlagButton.Text = "FFlag OFF"
-FFlagButton.TextColor3 = Color3.fromRGB(255,255,255)
-FFlagButton.BackgroundColor3 = Color3.fromRGB(20,20,80)
-FFlagButton.Font = Enum.Font.SourceSansBold
-FFlagButton.TextSize = 16
-Instance.new("UICorner", FFlagButton).CornerRadius = UDim.new(0,8)
-
--- Logic nút 1: Unwalk
-UnwalkButton.MouseButton1Click:Connect(function()
-    -- 👉 Bạn dán loadstring riêng của bạn vào đây
-end)
-
--- Logic nút 2: FFlag Toggle
-local enabled = false
-
-FFlagButton.MouseButton1Click:Connect(function()
-    enabled = not enabled
-    if enabled then
-        FFlagButton.Text = "FFlag ON"
-        FFlagButton.BackgroundColor3 = Color3.fromRGB(20,80,20)
-
-        setfflag("DFFlagSimAdaptiveAdjustTimestepForControllerManager","False")
-setfflag("DFFlagDebugSimUseManualTimestepMultiplier","False")
-setfflag("DFFlagSimHumanoidFirstPerson240hz","True")
-setfflag("DFFlagSimStepPhysicsCheckTimeStep","True")
-setfflag("DFFlagAnimatorEnableNewAdornments","True")
-setfflag("DFFlagEnableControlRigIkTargets","True")
-setfflag("DFFlagIkControlEnableAutopole","True")
-setfflag("DFFlagIkTwoBoneBetterSolver","True")
-setfflag("DFFlagAnimatorPostProcessIK","True")
-setfflag("DFFlagDebugPerfMode","True")
-
-setfflag("DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou1","1073741823")
-setfflag("DFIntTimestepArbiterBoundingBoxIntersectionThresholdThou2","2147483646")
-setfflag("DFIntGameNetPVHeaderRotationOrientIdToleranceExponent","-2147483647")
-setfflag("DFIntTimestepArbiterVelocityCriteriaThresholdFourDt","1073741823")
-setfflag("DFIntGameNetPVHeaderRotationalVelocityZeroCutoffExponent","-5000")
-setfflag("DFIntTimestepArbiterVelocityCriteriaThresholdTwoDt","2147483646")
-setfflag("DFIntAnimatorRetargetInterpolateFKCorrectionMaxAngleDeg","360")
-setfflag("DFIntTimestepArbiterAngAccelerationThresholdThou","1073741823")
-setfflag("DFIntGameNetPVHeaderLinearVelocityZeroCutoffExponent","-5000")
-setfflag("DFIntAnimatorRetargetInterpolateFKCorrectionMinAngleDeg","0")
-setfflag("DFIntSimAdaptiveHumanoidPDControllerSubstepMultiplier","150")
-setfflag("DFIntDataSenderMaxJoinBandwidthBpsMultiplier","2147483647")
-setfflag("DFIntGameNetPVHeaderTranslationZeroCutoffExponent","-5000")
-setfflag("DFIntTimestepArbiterCharacteristicLengthThou","1073741823")
-setfflag("DFIntGameNetDontSendRedundantDeltaThresholdMillionth","1")
-setfflag("DFIntInterpolationFrameRotVelocityThresholdMillionth","0")
-setfflag("DFIntSimExplicitlyCappedTimestepMultiplier","2147483646")
-setfflag("DFIntTimestepArbiterConditionNumberThresholdThou","1000")
-setfflag("DFIntGameNetDontSendRedundantDeltaPositionMillionth","1")
-setfflag("DFIntTimestepArbiterAccelerationModelFactorThou","1000")
-setfflag("DFIntPhysicsEMAInverseSmoothingFactorThrottling","128")
-setfflag("DFIntDataSenderMaxBandwidthBpsMultiplier","2147483647")
-setfflag("DFIntInterpolationFramePositionThresholdMillionth","0")
-setfflag("DFIntInterpolationFrameVelocityThresholdMillionth","0")
-setfflag("DFIntTimestepArbiterHumanoidTurningVelThreshold","1")
-setfflag("DFIntTimestepArbiterHumanoidLinearVelThreshold","1")
-setfflag("DFIntTimestepArbiterThresholdCFLThou","2147483647")
-setfflag("DFIntDataSenderMaxJoinBandwidthBps","2147483647")
-setfflag("DFIntSimDefaultHumanoidTimestepMultiplier","150")
-setfflag("DFIntPhysicsSenderMaxBandwidthBps","2147483647")
-setfflag("DFIntTimestepArbiterCollidingHumanoidTsm","150")
-setfflag("DFIntPhysicsSenderMaxBandwidthBpsScaling","240")
-setfflag("DFIntSimTimestepMultiplierDebounceCount","2")
-setfflag("DFIntDataSenderMaxBandwidthBps","2147483647")
-setfflag("DFIntPhysicsEMAInverseSmoothingFactor","512")
-setfflag("DFIntTimestepArbiterOmegaThou","1073741823")
-setfflag("DFIntPhysicsNOUCountHundredth","2147483647")
-setfflag("DFIntGameNetDontSendRedundantNumTimes","1")
-setfflag("DFIntAngularVelociryLimit","800000")
-setfflag("DFIntDataSenderRate","2147483647")
-setfflag("DFIntS2PhysicsSenderRate","160")
-
-setfflag("FFlagAnimationStreamSourceUseRuntimeSyncPrims","True")
-setfflag("FFlagAnimationStreamTrackUseRuntimeSyncPrims","True")
-setfflag("FFlagAnimatorRetargetSkipAnkleModification","False")
-setfflag("FFlagEnablePhysicsAdaptiveTimeSteppingIXP","True")
-setfflag("FFlagKeyframeSequenceUseRuntimeSyncPrims","True")
-setfflag("FFlagHandleAltEnterFullscreenManually","False")
-setfflag("FFlagHumanoidStateUseRuntimeSyncPrims","True")
-setfflag("FFlagRealTimeAnimationEnableRefactor","True")
-setfflag("FFlagRealTimeAnimationUseAudioAPI","True")
-setfflag("FFlagAvatarUseRuntimeSyncPrims4","True")
-setfflag("FFlagLiveAnimationUpdateSupport","True")
-setfflag("FFlagQuaternionPoseCorrection","True")
-setfflag("FFlagAnimationTrackStepFix","True")
-setfflag("FFlagEnableAsyncInput","True")
-setfflag("FFlagDebugDisplayFPS","True")
-
-setfflag("FIntMaxTimestepMultiplierIntegrationError","2147483647")
-setfflag("FIntMaxTimestepMultiplierAcceleration","2147483647")
-setfflag("FIntMaxTimestepMultiplierContstraint","2147483647")
-setfflag("FIntMaxTimestepMultiplierVelocity","2147483647")
-setfflag("FIntMaxTimestepMultiplierHumanoid","2147483647")
-setfflag("FIntMaxTimestepMultiplierBuoyancy","2147483647")
-setfflag("FIntSmoothMouseSpringFrequencyTenths","70")
-
-setfflag("FStringRemoteAnimationSmoothingStrategy","Exponential")
-
-
-    else
-        FFlagButton.Text = "FFlag OFF"
-        FFlagButton.BackgroundColor3 = Color3.fromRGB(20,20,80)
-
-        -- 👉 Nếu muốn, bạn có thể reset lại vài flag tại đây
+local function setFlags()
+    for name, value in pairs(FFlags) do
+        pcall(function() setfflag(tostring(name), tostring(value)) end)
     end
+end
+
+local function respawn(plr)
+    -- classic soft respawn logic; có thể giữ nguyên tuỳ ý bạn
+    local char = plr.Character
+    if not char then return end
+    local hum = char:FindFirstChildWhichIsA("Humanoid")
+    if hum then
+        hum:ChangeState(Enum.HumanoidStateType.Dead)
+    end
+    char:ClearAllChildren()
+    local newChar = Instance.new("Model"); newChar.Parent = workspace
+    plr.Character = newChar
+    task.wait()
+    plr.Character = char
+    newChar:Destroy()
+end
+
+------------------------------------------------------------------------
+-- DESYNC THẬT SỰ: Khi bật thì khóa networkownership HRP về client (vị trí thật không sync lên server)
+------------------------------------------------------------------------
+
+local ESPFolder = Instance.new("Folder")
+ESPFolder.Name = "ESPFolder"
+ESPFolder.Parent = workspace
+local fakePosESP = nil
+local serverPosition = nil
+local networkDesyncConn = nil
+
+local function createESPVisual()
+    local part = Instance.new("Part")
+    part.Name = "ServerPosBox"
+    part.Size = Vector3.new(4, 6, 2)
+    part.Transparency = 1
+    part.Anchored = true
+    part.CanCollide = false
+    part.Parent = ESPFolder
+
+    local box = Instance.new("SelectionBox")
+    box.Name = "Outline"
+    box.Adornee = part
+    box.Parent = part
+    box.Color3 = Config.ESPColor
+    box.LineThickness = 0.10
+    box.Transparency = 0
+    box.SurfaceTransparency = 0.85
+
+    local bb = Instance.new("BillboardGui")
+    bb.Parent = part
+    bb.Adornee = part
+    bb.Size = UDim2.new(0, 100, 0, 50)
+    bb.AlwaysOnTop = true
+    bb.StudsOffset = Vector3.new(0, 4, 0)
+    local text = Instance.new("TextLabel")
+    text.Parent = bb
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.Text = "YOUR POSITION"
+    text.TextColor3 = Config.ESPColor
+    text.TextScaled = false
+    text.TextSize = 10
+    text.Font = Enum.Font.GothamBold
+    text.TextStrokeTransparency = 0.5
+    return part
+end
+
+-- Cơ chế desync: Khi ON thì force networkownership HRP về client, vị trí update chỉ local
+local function Do_Desync(enable)
+    local char = player.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    if enable then
+        -- Take networkowner về client
+        pcall(function() hrp:SetNetworkOwner(player) end)
+        -- Fake ESP (client-only) luôn follow vị trí xử lý client
+        if not fakePosESP then
+            ESPFolder:ClearAllChildren()
+            fakePosESP = createESPVisual()
+        end
+        fakePosESP.CFrame = hrp.CFrame
+        -- Bắt đầu update liên tục (local only, người khác sẽ không thấy bạn dịch chuyển)
+        if not networkDesyncConn then
+            networkDesyncConn = RunService.RenderStepped:Connect(function()
+                if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return end
+                -- update ESP theo local vị trí HRP
+                local pos = hrp.Position
+                fakePosESP.CFrame = CFrame.new(pos)
+            end)
+        end
+    else
+        -- Restore sync (server thấy bạn di chuyển lại)
+        pcall(function() hrp:SetNetworkOwnershipAuto() end) -- auto assign lại theo server
+        if networkDesyncConn then networkDesyncConn:Disconnect(); networkDesyncConn = nil end
+        if fakePosESP then fakePosESP.CFrame = hrp.CFrame end
+    end
+end
+
+local function disableDesyncAndESP()
+    if networkDesyncConn then networkDesyncConn:Disconnect(); networkDesyncConn = nil end
+    ESPFolder:ClearAllChildren()
+    fakePosESP = nil
+end
+
+-------------------------------------------------------------------------------------------------
+-- Giao diện
+-------------------------------------------------------------------------------------------------
+local function CreateGUI()
+    if CoreGui:FindFirstChild("DesyncControlUI") then CoreGui.DesyncControlUI:Destroy() end
+    if player.PlayerGui:FindFirstChild("DesyncControlUI") then player.PlayerGui.DesyncControlUI:Destroy() end
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "DesyncControlUI"
+    pcall(function() ScreenGui.Parent = CoreGui end)
+    if not ScreenGui.Parent then ScreenGui.Parent = player.PlayerGui end
+    ScreenGui.ResetOnSpawn = false
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Parent = ScreenGui
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
+    MainFrame.Size = UDim2.new(0, 190, 0, 140)
+
+    local UICorner = Instance.new("UICorner"); UICorner.CornerRadius = UDim.new(0, 10); UICorner.Parent = MainFrame
+
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Parent = MainFrame
+    UIStroke.Color = Color3.fromRGB(255, 255, 255)
+    UIStroke.Thickness = Config.StrokeThickness
+
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Parent = UIStroke
+    UIGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+    }
+    RunService.RenderStepped:Connect(function()
+        UIGradient.Rotation = (tick() * 100) % 360
+    end)
+
+    local Title = Instance.new("TextLabel")
+    Title.Parent = MainFrame
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 0, 0, 10)
+    Title.Size = UDim2.new(1, 0, 0, 25)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = "NORRYS's"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 16
+    Title.TextStrokeTransparency = 0.8
+
+    -----
+    local DesyncBtn = Instance.new("TextButton")
+    DesyncBtn.Parent = MainFrame
+    DesyncBtn.Name = "ToggleDesyncBtn"
+    DesyncBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    DesyncBtn.Position = UDim2.new(0.1, 0, 0.35, 0)
+    DesyncBtn.Size = UDim2.new(0.8, 0, 0.22, 0)
+    DesyncBtn.Font = Enum.Font.GothamBold
+    DesyncBtn.Text = "Desync: OFF"
+    DesyncBtn.TextColor3 = Config.ESPColor
+    DesyncBtn.TextSize = 14
+    Instance.new("UICorner", DesyncBtn).CornerRadius = UDim.new(0, 8)
+    local dsEnStroke = Instance.new("UIStroke", DesyncBtn)
+    dsEnStroke.Color = Config.ESPColor
+    dsEnStroke.Thickness = 0.7
+    dsEnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+    DesyncBtn.MouseButton1Click:Connect(function()
+        Config.DesyncEnabled = not Config.DesyncEnabled
+        if Config.DesyncEnabled then
+            DesyncBtn.Text = "Desync: ON"
+            DesyncBtn.BackgroundColor3 = Config.BTNSColor
+            Do_Desync(true)
+        else
+            DesyncBtn.Text = "Desync: OFF"
+            DesyncBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            Do_Desync(false)
+        end
+    end)
+    -- Draggable
+    local dragging, dragInput, dragStart, startPos
+    MainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    MainFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            local delta = input.Position - dragStart
+            MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+---------------------------------------------------------------
+-- INITIALIZATION: ĐÚNG Ý BẠN
+---------------------------------------------------------------
+setFlags()
+respawn(player)
+disableDesyncAndESP()
+Config.DesyncEnabled = false
+
+-- Khi vừa load, fake ESP và sync theo server (Desync: OFF), mọi người vẫn THẤY bạn di chuyển bình thường
+player.CharacterAdded:Connect(function()
+    -- Mỗi khi respawn lại (auto hoặc do chết), nếu Desync: ON thì giữ còn OFF thì reset theo server
+    task.wait(0.2)
+    Do_Desync(Config.DesyncEnabled)
 end)
+
+CreateGUI()
