@@ -1,16 +1,16 @@
 --[[ 
-    NORRYS's Ultimate Desync Script (Flag only when ON, WorldStepMax swap support) 
-    Chức năng:
-    - Khi load script: respawn làm sạch, gán WorldStepMax=1, KHÔNG setfflag toàn bộ!
-    - Khi nhấn Desync ON: mới set các flag, đặc biệt WorldStepMax=30, bật Desync, người khác không thấy di chuyển, client tự điều khiển.
-    - Khi nhấn OFF: Desync tắt, network trả lại bình thường, ESP ẩn, WorldStepMax lại bằng 1, không gọi lại setflag nữa!
+    NORRYS's DESYNC FULL PREMIUM (UI đẹp, ESP chuẩn, set WorldStepMax swap!)
+    - Khi load: chỉ reset logic, WorldStepMax=1, không set mọi FFlag!
+    - Khi bật Desync ON: set all FFlag (đặc biệt WorldStepMax=30), ESP “YOUR POSITION” Lerp mượt.
+    - Khi OFF: WorldStepMax=1, tắt ESP, trả networkownership HRP như cũ, không động vào FFlag khác!
+    - Menu đẹp, có Gradient động, đủ nút reset/desync/disable anim, ESP luôn hiện đúng hiệu ứng cũ.
 --]]
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
-
+local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 local Config = {
@@ -19,6 +19,7 @@ local Config = {
     BTNSColor = Color3.fromRGB(255, 170, 0),
     AnimDisable = false,
     DesyncEnabled = false,
+    MenuSize = UDim2.new(0, 220, 0, 195)
 }
 
 local FFlags = {
@@ -65,20 +66,104 @@ local FFlags = {
 }
 
 local defaultWorldStepMax = 1 -- Giá trị WorldStepMax khi OFF
+local fakePosESP, networkDesyncConn, lerpConn = nil, nil, nil
 
-local function setFlagWorldStepMaxOff()
-    pcall(function()
-        setfflag("WorldStepMax", tostring(defaultWorldStepMax))
-    end)
+---------------------------------------------------------------------------
+-- Animation disable block (y như gốc)
+local animDisableConn = nil
+local originalAnimIds = {}
+local animateScript = nil
+local ANIM_TYPES = {"walk", "run", "jump", "fall", "idle", "toolnone"}
+
+local function cacheOriginalAnimations()
+    local char = player.Character
+    if not char then return false end
+    animateScript = char:FindFirstChild("Animate")
+    if not animateScript then return false end
+    originalAnimIds = {}
+    for _, animType in ipairs(ANIM_TYPES) do
+        local animFolder = animateScript:FindFirstChild(animType)
+        if animFolder then
+            originalAnimIds[animType] = {}
+            for _, anim in ipairs(animFolder:GetChildren()) do
+                if anim:IsA("Animation") then
+                    originalAnimIds[animType][anim.Name] = anim.AnimationId
+                end
+            end
+        end
+    end
+    return true
 end
+
+local function disableAnimations()
+    if not animateScript then return end
+    for _, animType in ipairs(ANIM_TYPES) do
+        local animFolder = animateScript:FindFirstChild(animType)
+        if animFolder then
+            for _, anim in ipairs(animFolder:GetChildren()) do
+                if anim:IsA("Animation") then
+                    anim.AnimationId = ""
+                end
+            end
+        end
+    end
+    local char = player.Character
+    if char then
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            for _, track in ipairs(hum:GetPlayingAnimationTracks()) do
+                track:Stop(0)
+            end
+        end
+    end
+end
+
+local function restoreAnimations()
+    local char = player.Character
+    if not char then return end
+    animateScript = char:FindFirstChild("Animate")
+    if not animateScript or not originalAnimIds then return end
+    for animType, anims in pairs(originalAnimIds) do
+        local animFolder = animateScript:FindFirstChild(animType)
+        if animFolder then
+            for animName, animId in pairs(anims) do
+                local anim = animFolder:FindFirstChild(animName)
+                if anim and anim:IsA("Animation") then
+                    anim.AnimationId = animId
+                end
+            end
+        end
+    end
+end
+
+local function toggleAnimLoop(state)
+    if state then
+        if not next(originalAnimIds) then
+            cacheOriginalAnimations()
+        end
+        if animDisableConn then animDisableConn:Disconnect() end
+        animDisableConn = RunService.Heartbeat:Connect(function()
+            if Config.AnimDisable then
+                disableAnimations()
+            end
+        end)
+    else
+        if animDisableConn then
+            animDisableConn:Disconnect()
+            animDisableConn = nil
+        end
+        restoreAnimations()
+    end
+end
+---------------------------------------------------------------------------
 
 local function setFlags()
     for name, value in pairs(FFlags) do
-        -- Khi bật ON, set tất cả flag với value bình thường (trong đó có WorldStepMax=30)
-        pcall(function()
-            setfflag(tostring(name), tostring(value))
-        end)
+        pcall(function() setfflag(tostring(name), tostring(value)) end)
     end
+end
+local function setFlagWorldStepMaxOff()
+    pcall(function() setfflag("WorldStepMax", tostring(defaultWorldStepMax)) end)
 end
 
 local function respawn(plr)
@@ -97,13 +182,11 @@ local function respawn(plr)
     newChar:Destroy()
 end
 
+-- ESP logic PREMIUM VERSION!
 local ESPFolder = Instance.new("Folder")
 ESPFolder.Name = "ESPFolder"
 ESPFolder.Parent = workspace
-
-local fakePosESP = nil
-local networkDesyncConn = nil
-
+local serverPosition = nil
 function createESPVisual()
     local part = Instance.new("Part")
     part.Name = "ServerPosBox"
@@ -137,6 +220,7 @@ function createESPVisual()
     text.TextSize = 10
     text.Font = Enum.Font.GothamBold
     text.TextStrokeTransparency = 0.5
+
     return part
 end
 
@@ -150,20 +234,20 @@ local function enableDesync()
     ESPFolder:ClearAllChildren()
     fakePosESP = createESPVisual()
     fakePosESP.CFrame = hrp.CFrame
-    if networkDesyncConn then
-        networkDesyncConn:Disconnect()
-        networkDesyncConn = nil
-    end
-    networkDesyncConn = RunService.RenderStepped:Connect(function()
-        if not hrp.Parent then return end
-        fakePosESP.CFrame = hrp.CFrame
+    serverPosition = hrp.Position
+    if lerpConn then lerpConn:Disconnect() end
+    lerpConn = RunService.RenderStepped:Connect(function()
+        -- Dùng Lerp như mã gốc
+        if fakePosESP and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local goal = player.Character.HumanoidRootPart.Position
+            fakePosESP.CFrame = fakePosESP.CFrame:Lerp(CFrame.new(goal), 0.2)
+        end
     end)
     ESPFolder.Parent = workspace
 end
 
 local function disableDesync()
-    setFlagWorldStepMaxOff() -- đảm bảo WorldStepMax=1
-    -- Ngược lại, các flag khác vẫn giữ nguyên giá trị đã set trước đó nếu có (không reset)
+    setFlagWorldStepMaxOff() -- WorldStepMax=1
     local char = player.Character
     if char then
         local hrp = char:FindFirstChild("HumanoidRootPart")
@@ -171,10 +255,7 @@ local function disableDesync()
             pcall(function() hrp:SetNetworkOwnershipAuto() end)
         end
     end
-    if networkDesyncConn then
-        networkDesyncConn:Disconnect()
-        networkDesyncConn = nil
-    end
+    if lerpConn then lerpConn:Disconnect() end
     ESPFolder:ClearAllChildren()
     fakePosESP = nil
 end
@@ -193,10 +274,23 @@ local function CreateGUI()
     MainFrame.Parent = ScreenGui
     MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.5, -110, 0.5, -90)
-    MainFrame.Size = UDim2.new(0, 220, 0, 170)
+    MainFrame.Position = UDim2.new(0.5, -Config.MenuSize.X.Offset // 2, 0.5, -Config.MenuSize.Y.Offset // 2)
+    MainFrame.Size = Config.MenuSize
     local UICorner = Instance.new("UICorner"); UICorner.CornerRadius = UDim.new(0, 10); UICorner.Parent = MainFrame
     local UIStroke = Instance.new("UIStroke"); UIStroke.Parent = MainFrame; UIStroke.Color = Color3.fromRGB(255, 255, 255); UIStroke.Thickness = Config.StrokeThickness
+
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Parent = UIStroke
+    UIGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+    }
+    RunService.RenderStepped:Connect(function()
+        UIGradient.Rotation = (tick() * 100) % 360
+    end)
 
     local Title = Instance.new("TextLabel")
     Title.Parent = MainFrame
@@ -204,7 +298,7 @@ local function CreateGUI()
     Title.Position = UDim2.new(0, 0, 0, 10)
     Title.Size = UDim2.new(1, 0, 0, 25)
     Title.Font = Enum.Font.GothamBold
-    Title.Text = "NORRYS's ULTIMATE DESYNC"
+    Title.Text = "NORRYS's"
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.TextSize = 16
     Title.TextStrokeTransparency = 0.8
@@ -213,8 +307,8 @@ local function CreateGUI()
     DesyncEnableBtn.Parent = MainFrame
     DesyncEnableBtn.Name = "ToggleDesyncBtn"
     DesyncEnableBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    DesyncEnableBtn.Position = UDim2.new(0.11, 0, 0.32, 0)
-    DesyncEnableBtn.Size = UDim2.new(0.78, 0, 0.22, 0)
+    DesyncEnableBtn.Position = UDim2.new(0.11, 0, 0.2, 0)
+    DesyncEnableBtn.Size = UDim2.new(0.78, 0, 0.18, 0)
     DesyncEnableBtn.Font = Enum.Font.GothamBold
     DesyncEnableBtn.Text = "Desync: OFF"
     DesyncEnableBtn.TextColor3 = Config.ESPColor
@@ -234,6 +328,54 @@ local function CreateGUI()
             DesyncEnableBtn.Text = "Desync: OFF"
             DesyncEnableBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
             disableDesync()
+        end
+    end)
+
+    -- Desync (Reset) button
+    local DesyncBtn = Instance.new("TextButton")
+    DesyncBtn.Parent = MainFrame
+    DesyncBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    DesyncBtn.Position = UDim2.new(0.11, 0, 0.41, 0)
+    DesyncBtn.Size = UDim2.new(0.78, 0, 0.18, 0)
+    DesyncBtn.Font = Enum.Font.GothamBold
+    DesyncBtn.Text = "Desync (Reset)"
+    DesyncBtn.TextColor3 = Config.ESPColor
+    DesyncBtn.TextSize = 14
+    Instance.new("UICorner", DesyncBtn).CornerRadius = UDim.new(0, 6)
+    local ds = Instance.new("UIStroke", DesyncBtn)
+    ds.Color = Config.ESPColor
+    ds.Thickness = 0.6
+    ds.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    DesyncBtn.MouseButton1Click:Connect(function()
+        DesyncBtn.Text = "Resetting..."
+        respawn(player)
+        task.wait(4.5)
+        DesyncBtn.Text = "Desync (Reset)"
+    end)
+
+    -- Animation disable button
+    local AnimBtn = Instance.new("TextButton")
+    AnimBtn.Parent = MainFrame
+    AnimBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    AnimBtn.Position = UDim2.new(0.11, 0, 0.62, 0)
+    AnimBtn.Size = UDim2.new(0.78, 0, 0.18, 0)
+    AnimBtn.Font = Enum.Font.GothamBold
+    AnimBtn.Text = "Disable Animations"
+    AnimBtn.TextColor3 = Config.ESPColor
+    AnimBtn.TextSize = 14
+    Instance.new("UICorner", AnimBtn).CornerRadius = UDim.new(0, 6)
+    local as = Instance.new("UIStroke", AnimBtn)
+    as.Color = Config.ESPColor
+    as.Thickness = 0.6
+    as.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    AnimBtn.MouseButton1Click:Connect(function()
+        Config.AnimDisable = not Config.AnimDisable
+        if Config.AnimDisable then
+            AnimBtn.BackgroundColor3 = Config.BTNSColor
+            toggleAnimLoop(true)
+        else
+            AnimBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            toggleAnimLoop(false)
         end
     end)
 
@@ -262,12 +404,13 @@ local function CreateGUI()
     end)
 end
 
--- Vừa load: chỉ RESPAWN + set WorldStepMax=1, KHÔNG set flag toàn bộ, KHÔNG enable desync
+-- Khi load: chỉ RESPAWN + set WorldStepMax=1, không setFFlag toàn bộ, không enable desync, không ESP
 respawn(player)
 Config.DesyncEnabled = false
 disableDesync()
 setFlagWorldStepMaxOff()
 
+-- Khi respawn, chỉ enable ESP/mode nếu đang ON
 player.CharacterAdded:Connect(function()
     task.wait(0.2)
     if Config.DesyncEnabled then
@@ -276,12 +419,10 @@ player.CharacterAdded:Connect(function()
         disableDesync()
         setFlagWorldStepMaxOff()
     end
+    if Config.AnimDisable then
+        task.wait(0.5)
+        cacheOriginalAnimations()
+    end
 end)
 
 CreateGUI()
-
---[[ 
-    File đủ >13KB nếu bổ sung các flag, phần GUI, comment đầy đủ.
-    Bạn có thể thêm các biến, comment, các cấu hình, string, logic phụ nếu cần tăng kích thước cho sát 17KB hoặc hơn 13KB như yêu cầu thực tế.
-    Cốt lõi logic: chỉ set WorldStepMax=30 khi ON, khi OFF hoặc load lại set về 1 là OK.
---]]
