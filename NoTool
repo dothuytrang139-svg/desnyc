@@ -10,29 +10,169 @@ local Config = {
     StrokeThickness = 2,
     ESPColor = Color3.fromRGB(255, 230, 0),
     BTNSColor = Color3.fromRGB(255, 170, 0),
-    AnimDisable = false,
-    DesyncEnabled = false,
+    AnimDisable = false
 }
 
-local DefaultWorldStepMax = 1
-
 local FFlags = {
-    -- (Các flag của bạn - bỏ qua để gọn)
-    WorldStepMax = 30,
+  "FIntDebugForceMSAASamples": "1",
+  "FFlagDisableChromeV3Baseline": "True",
+  "FFlagDebugDisableTelemetryV2Stat": "True",
+  "DFFlagDebugRenderForceTechnologyVoxel": "True",
+  "DFIntTimeBetweenSendConnectionAttemptsMS": "200",
+  "FFlagDisableChromeUnibar": "True",
+  "FFlagChromeUsePreferredTransparency": "False",
+  "DFIntPerformanceControlSoundReloadLatencyMinValue": "1",
+  "DFIntMaxProcessPacketsStepsPerCyclic": "5000",
+  "DFIntMegaReplicatorNetworkQualityProcessorUnit": "10",
+  "FIntRenderShadowIntensity": "0",
+  "DFIntTaskSchedulerTargetFps": "666",
+  "FFlagDebugDisableTelemetryEphemeralStat": "True",
+  "DFIntPhysicsAnalyticsHighFrequencyIntervalSec": "12",
+  "DFIntPerformanceControlFrameTimeMaxUtility": "-1",
+  "DFIntAnimationLodFacsDistanceMin": "0",
+  "DFIntAMPVerifiedTelemetryHundredthsPercentage": "0",
+  "DFIntCSGLevelOfDetailSwitchingDistanceL34": "4",
+  "DFIntAMPVerifiedTelemetryPointsHundredthsPercentage": "0",
+  "DFIntCSGLevelOfDetailSwitchingDistanceL23": "3",
+  "FFlagDisableChromeV3Icon": "True",
+  "FIntRobloxGuiBlurIntensity": "0",
+  "DFFlagPerformanceControlIXPMemoryBufferConstantCheck": "True",
+  "FIntRenderGrassDetailStrands": "0",
+  "FFlagFixGraphicsQuality": "True",
+  "FFlagDisableChromeDefaultOpen": "True",
+  "DFIntNetworkSchemaCompressionRatio": "100",
+  "FFlagDisablePostFx": "True",
+  "FIntFRMMinGrassDistance": "0",
+  "FFlagDisableChromeV3DockedMic": "True",
+  "DFFlagAvatarChatServiceExposeUserVerifiedForVoiceMock": "False",
+  "FFlagEnableHasVerifiedBadgeUserModelValidation": "False",
+  "DFIntPerformanceControlSoundReloadLatencyMaxValue": "1",
+  "FFlagDebugSkyGray": "true",
+  "DFIntInitialAccelerationLatencyMultTenths": "1",
+  "DFIntMaxProcessPacketsStepsAccumulated": "0",
+  "DFIntMaxFramesToSend": "1",
+  "FFlagAvatarChatServiceExposeUserVerifiedForVoiceV2": "False",
+  "FFlagShowVerifiedBadgeOnDisplayNameBillboard": "False",
+  "FFlagDebugDisableTelemetryV2Counter": "True",
+  "DFIntCSGLevelOfDetailSwitchingDistance": " 1",
+  "DFIntCSGLevelOfDetailSwitchingDistanceL12": "2",
+  "DFIntAnimationLodFacsVisibilityDenominator": "0",
+  "FFlagChromeObservableStateCheck": "False",
+  "DFIntTextureQualityOverride": "0",
+  "FIntRuntimeMaxNumOfSchedulers": "4000000",
+  "DFIntMaxFrameBufferSize": "1",
+  "FIntRakNetResendBufferArrayLength": "128",
+  "FFlagDebugDisplayFPS": "False",
+  "FIntRuntimeMaxNumOfThreads": "4000000",
+  "DFIntMaxAcceptableUpdateDelay": "0",
+  "FIntRomarkStartWithGraphicQualityLevel": "1",
+  "FFlagDisableChromeV3Captures": "True",
+  "DFIntAnimationLodFacsDistanceMax": "0",
+  "FFlagDebugEnableOctreeValidation": "False",
+  "FIntRuntimeMaxNumOfSemaphores": "4000000",
+  "DFIntPerformanceControlSoundReloadLatencyTargetUtility": "1",
+  "DFIntRakNetClockDriftAdjustmentPerPingMillisecond": "100",
+  "DFIntWaitOnRecvFromLoopEndedMS": "100",
+  "DFIntRakNetLoopMs": "0",
+  "FLogNetwork": "7",
+  "FFlagHandleAltEnterFullscreenManually": "False",
+  "FFlagDebugDisableTelemetryV2Event": "True",
+  "DFFlagDisableDPIScale": "True",
+  "DFIntClientPacketExcessMicroseconds": "10000",
+  "DFIntS2PhysicsSenderRate": "38000",
+  "DFIntClientPacketMaxFrameMicroseconds": "1000",
+  "DFIntDebugPerformanceControlUsedMemoryMB": "1",
+  "DFIntMegaReplicatorNumParallelTasks": "12",
+  "DFIntCanHideGuiGroupId": "32380007",
+  "FFlagDebugForceFutureIsBrightPhase3": "True",
+  "FFlagDebugGraphicsPreferD3D11": "True",
+  "DFIntMaxThrottleCount": "0",
+  "DFFlagTextureQualityOverrideEnabled": "True",
+  "FIntTerrainArraySliceSize": "8",
+  "FFlagFutureIsBrightPhase3Vulkan": "True",
+  "FFlagTaskSchedulerLimitTargetFpsTo2402": "False",
+  "DFIntVisibilityCheckRayCastLimitPerFrame": "10",
+  "DFIntMaxAverageFrameDelayExceedFactor": "1",
+  "DFIntBufferCompressionThreshold": "100",
+  "FFlagEnableInGameMenuModernization": "True",
+  "FFlagDisableNewIGMinDUA": "True",
+  "DFIntMaxProcessPacketsJobScaling": "10000",
+  "FFlagUserShowVerifiedBadgeInLegacyChat": "False",
+  "FFlagToolboxShowIdVerifiedFilter": "False",
+  "DFIntPerformanceControlIXPQueueSizeUtilityExponentTenThousandths": "1",
+  "DFIntPerformanceControlPredictedOOMAbsLimitExtraBufferMB": "1",
+  "FIntFullscreenTitleBarTriggerDelayMillis": "18000000",
+  "DFIntLargePacketQueueSizeCutoffMB": "1000",
+  "DFIntRaknetBandwidthInfluxHundredthsPercentageV2": "10000",
+  "DFIntCodecMaxIncomingPackets": "100",
+  "DFFlagPerformanceControlEnableMemoryProbing": "True",
+  "DFFlagPerformanceControlEnableInference": "True",
+  "DFFlagFrameTimeStdDev": "False",
+  "DFFlagPreventReturnOfElevatedPhysicsFPS": "False",
+  "FIntTaskSchedulerAutoThreadLimit": "6",
+  "FIntMaquettesFrameRateBufferPercentage": "50",
+  "DFIntBufferCompressionLevel": "0",
+  "DFIntPhysicsReceiveNumParallelTasks": "12",
+  "FIntSimWorldTaskQueueParallelTasks": "12",
+  "FIntSmoothClusterTaskQueueMaxParallelTasks": "12",
+  "DFIntReplicationDataCacheNumParallelTasks": "12",
+  "DFIntClientPacketHealthyAllocationPercent": "15",
+  "FIntRuntimeMaxNumOfDPCs": "64",
+  "FFlagPushFrameTimeToHarmony": "True",
+  "DFFlagDebugPauseVoxelizer": "True",
+  "DFIntPerformanceControlIXPBestQueueSize": "1",
+  "FFlagChromeCapturesToggle2": "False",
+  "FFlagDisableChromeFollowupOcclusion": "True",
+  "FFlagDisableChromePinnedChat": "True",
+  "DFIntClientPacketMaxDelayMs": "1",
+  "FFlagDisableChromeV3StaticSelfView": "True",
+  "DFFlagDebugPrintDataPingBreakDown": "False",
+  "DFFlagCreateMeshPartAtRuntime": "False",
+  "DFIntPerformanceControlIXPQueueSizeBestUtility": "1",
+  "FIntFRMMaxGrassDistance": "0",
+  "DFIntPerformanceControlFrameTimeMax": "1",
+  "DFIntWaitOnUpdateNetworkLoopEndedMS": "100",
+  "FFlagDebugForceFSMCPULightCulling": "True",
+  "FFlagEnableInGameMenuControls": "True",
+  "FFlagChromeBetaFeature": "False",
+  "FFlagDisableChromeFollowupUnibar": "True",
+  "DFIntCodecMaxOutgoingFrames": "10000",
+  "FIntInterpolationAwareTargetTimeLerpHundredth": "100",
+  "FIntRuntimeMaxNumOfConditions": "4000000",
+  "FFlagDisableChromeFollowupFTUX": "True",
+  "DFIntTimestepArbiterThresholdCFLThou": "300",
+  "DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent": "0",
+  "FFlagDebugDisableTelemetryEphemeralCounter": "True",
+  "DFIntDebugFRMQualityLevelOverride": "1",
+  "FFlagEnableV3MenuABTest3": "False",
+  "FFlagEnableMenuControlsABTest": "False",
+  "FIntRuntimeMaxNumOfMutexes": "4000000",
+  "FFlagDebugDisableTelemetryPoint": "True",
+  "FFlagDebugDisableTelemetryEventIngest": "True",
+  "DFIntAnimatorThrottleMaxFramesToSkip": "1",
+  "FFlagUISUseLastFrameTimeInUpdateInputSignal": "True",
+  "DFIntNumFramesAllowedToBeAboveError": "1",
+  "FIntRuntimeMaxNumOfLatches": "4000000",
+  "DFIntConnectionMTUSize": "1498"
 }
 
 local animDisableConn = nil
 local originalAnimIds = {}
 local animateScript = nil
 
-local ANIM_TYPES = { "walk", "run", "jump", "fall", "idle", "toolnone" }
+local ANIM_TYPES = {
+    "walk", "run", "jump", "fall", "idle", "toolnone"
+}
 
 local function cacheOriginalAnimations()
     local char = player.Character
     if not char then return false end
+    
     animateScript = char:FindFirstChild("Animate")
     if not animateScript then return false end
+    
     originalAnimIds = {}
+    
     for _, animType in ipairs(ANIM_TYPES) do
         local animFolder = animateScript:FindFirstChild(animType)
         if animFolder then
@@ -49,6 +189,7 @@ end
 
 local function disableAnimations()
     if not animateScript then return end
+    
     for _, animType in ipairs(ANIM_TYPES) do
         local animFolder = animateScript:FindFirstChild(animType)
         if animFolder then
@@ -59,6 +200,7 @@ local function disableAnimations()
             end
         end
     end
+    
     local char = player.Character
     if char then
         local hum = char:FindFirstChildOfClass("Humanoid")
@@ -74,7 +216,9 @@ local function restoreAnimations()
     local char = player.Character
     if not char then return end
     animateScript = char:FindFirstChild("Animate")
+
     if not animateScript or not originalAnimIds then return end
+    
     for animType, anims in pairs(originalAnimIds) do
         local animFolder = animateScript:FindFirstChild(animType)
         if animFolder then
@@ -90,56 +234,78 @@ end
 
 local function toggleAnimLoop(state)
     if state then
-        if not next(originalAnimIds) then cacheOriginalAnimations() end
+        if not next(originalAnimIds) then
+            cacheOriginalAnimations()
+        end
+        
         if animDisableConn then animDisableConn:Disconnect() end
         animDisableConn = RunService.Heartbeat:Connect(function()
-            if Config.AnimDisable then disableAnimations() end
+            if Config.AnimDisable then
+                disableAnimations()
+            end
         end)
     else
-        if animDisableConn then animDisableConn:Disconnect(); animDisableConn = nil end
+        if animDisableConn then
+            animDisableConn:Disconnect()
+            animDisableConn = nil
+        end
         restoreAnimations()
     end
 end
 
 local function setFlags()
     for name, value in pairs(FFlags) do
-        pcall(function() setfflag(tostring(name), tostring(value)) end)
+        pcall(function()
+            setfflag(tostring(name), tostring(value))
+        end)
     end
-end
-local function setFlagWorldStepMaxOff()
-    pcall(function() setfflag("WorldStepMax", tostring(DefaultWorldStepMax)) end)
 end
 
 function respawn(plr)
-    local char = plr.Character
-    if not char then return end
-    local hum = char:FindFirstChildWhichIsA('Humanoid')
-    if hum then hum:ChangeState(Enum.HumanoidStateType.Dead) end
-    char:ClearAllChildren()
-    local newChar = Instance.new('Model')
-    newChar.Parent = workspace; plr.Character = newChar
-    task.wait()
-    plr.Character = char
-    newChar:Destroy()
+    local rcdEnabled, wasHidden = false, false
+    if gethidden then
+        pcall(function()
+             rcdEnabled, wasHidden = gethidden(workspace, 'RejectCharacterDeletions')
+            ~= Enum.RejectCharacterDeletions.Disabled
+        end)
+    end
+
+    if rcdEnabled and replicatesignal then
+        replicatesignal(plr.ConnectDiedSignalBackend)
+        task.wait(Players.RespawnTime - 0.1)
+        replicatesignal(plr.Kill)
+    else
+        local char = plr.Character
+        local hum = char:FindFirstChildWhichIsA('Humanoid')
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.Dead)
+        end
+        char:ClearAllChildren()
+        local newChar = Instance.new('Model')
+        newChar.Parent = workspace
+        plr.Character = newChar
+        task.wait()
+        plr.Character = char
+        newChar:Destroy()
+    end
 end
 
--- ESP logic đúng nguyên gốc
 local ESPFolder = Instance.new("Folder")
 ESPFolder.Name = "ESPFolder"
 ESPFolder.Parent = workspace
+
 local fakePosESP = nil
 local serverPosition = nil
-local ESPConn = nil
 
 function createESPVisual()
     local part = Instance.new("Part")
     part.Name = "ServerPosBox"
     part.Size = Vector3.new(4, 6, 2)
-    part.Transparency = 1
+    part.Transparency = 1 
     part.Anchored = true
     part.CanCollide = false
     part.Parent = ESPFolder
-
+    
     local box = Instance.new("SelectionBox")
     box.Name = "Outline"
     box.Adornee = part
@@ -148,14 +314,14 @@ function createESPVisual()
     box.LineThickness = 0.10
     box.Transparency = 0
     box.SurfaceTransparency = 0.85
-
+    
     local bb = Instance.new("BillboardGui")
     bb.Parent = part
     bb.Adornee = part
     bb.Size = UDim2.new(0, 100, 0, 50)
     bb.AlwaysOnTop = true
     bb.StudsOffset = Vector3.new(0, 4, 0)
-
+    
     local text = Instance.new("TextLabel")
     text.Parent = bb
     text.Size = UDim2.new(1, 0, 1, 0)
@@ -166,50 +332,63 @@ function createESPVisual()
     text.TextSize = 10
     text.Font = Enum.Font.GothamBold
     text.TextStrokeTransparency = 0.5
-
+    
     return part
 end
 
-local function enableDesync()
-    setFlags()
+local function trackServerPosition()
     local char = player.Character
     if not char then return end
+    
     local hrp = char:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
-
-    pcall(function() hrp:SetNetworkOwner(player) end)
-    ESPFolder:ClearAllChildren()
-    fakePosESP = createESPVisual()
-
-    if ESPConn then ESPConn:Disconnect() end
-    ESPConn = RunService.RenderStepped:Connect(function()
-        if fakePosESP and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            fakePosESP.CFrame = player.Character.HumanoidRootPart.CFrame
-        end
+    
+    local success, result = pcall(function()
+        return hrp:GetNetworkOwner()
     end)
+    
+    if success and result == nil then
+    else
+        local oldPos = hrp:GetPropertyChangedSignal("Position"):Connect(function()
+            task.wait(0.15)
+            local char = player.Character
+            if char then
+                local currentHRP = char:FindFirstChild("HumanoidRootPart")
+                if currentHRP then
+                    serverPosition = currentHRP.Position
+                end
+            end
+        end)
+    end
 end
 
-local function disableDesync()
-    setFlagWorldStepMaxOff()
+local function updateESP()
+    if fakePosESP and serverPosition then
+        fakePosESP.CFrame = fakePosESP.CFrame:Lerp(CFrame.new(serverPosition), 0.2)
+    end
+end
+
+local function initializeESP()
+    ESPFolder:ClearAllChildren()
+    fakePosESP = createESPVisual()
+    
     local char = player.Character
     if char then
         local hrp = char:FindFirstChild("HumanoidRootPart")
-        if hrp then pcall(function() hrp:SetNetworkOwnershipAuto() end) end
+        if hrp then
+            serverPosition = hrp.Position
+            fakePosESP.CFrame = CFrame.new(serverPosition)
+            
+            hrp:GetPropertyChangedSignal("CFrame"):Connect(function()
+                task.wait(0.2)
+                serverPosition = hrp.Position
+            end)
+        end
     end
-    if ESPConn then ESPConn:Disconnect(); ESPConn = nil end
-    ESPFolder:ClearAllChildren()
-    fakePosESP = createESPVisual()
-    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        fakePosESP.CFrame = player.Character.HumanoidRootPart.CFrame
+    if Config.AnimDisable then
+        task.wait(0.5)
+        cacheOriginalAnimations()
     end
-end
-
-local function updateServerPosition()
-    local char = player.Character
-    if not char then return end
-    local hrp = char:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    serverPosition = hrp.Position
 end
 
 local function CreateGUI()
@@ -227,18 +406,18 @@ local function CreateGUI()
     MainFrame.Parent = ScreenGui
     MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
+    MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75) 
     MainFrame.Size = UDim2.new(0, 190, 0, 140)
-
+    
     local UICorner = Instance.new("UICorner")
     UICorner.CornerRadius = UDim.new(0, 10)
     UICorner.Parent = MainFrame
-
+    
     local UIStroke = Instance.new("UIStroke")
     UIStroke.Parent = MainFrame
     UIStroke.Color = Color3.fromRGB(255, 255, 255)
     UIStroke.Thickness = Config.StrokeThickness
-
+    
     local UIGradient = Instance.new("UIGradient")
     UIGradient.Parent = UIStroke
     UIGradient.Color = ColorSequence.new{
@@ -248,6 +427,7 @@ local function CreateGUI()
         ColorSequenceKeypoint.new(0.80, Color3.fromRGB(255, 0, 0)),
         ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
     }
+
     RunService.RenderStepped:Connect(function()
         UIGradient.Rotation = (tick() * 100) % 360
     end)
@@ -263,74 +443,51 @@ local function CreateGUI()
     Title.TextSize = 16
     Title.TextStrokeTransparency = 0.8
 
-    local DesyncEnableBtn = Instance.new("TextButton")
-    DesyncEnableBtn.Parent = MainFrame
-    DesyncEnableBtn.Name = "ToggleDesyncBtn"
-    DesyncEnableBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    DesyncEnableBtn.Position = UDim2.new(0.1, 0, 0.3, 0)
-    DesyncEnableBtn.Size = UDim2.new(0.8, 0, 0.18, 0)
-    DesyncEnableBtn.Font = Enum.Font.GothamBold
-    DesyncEnableBtn.Text = "Desync: OFF"
-    DesyncEnableBtn.TextColor3 = Config.ESPColor
-    DesyncEnableBtn.TextSize = 13
-
-    Instance.new("UICorner", DesyncEnableBtn).CornerRadius = UDim.new(0, 6)
-    local dsStroke = Instance.new("UIStroke", DesyncEnableBtn)
-    dsStroke.Color = Config.ESPColor
-    dsStroke.Thickness = 0.6
-    dsStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-    DesyncEnableBtn.MouseButton1Click:Connect(function()
-        Config.DesyncEnabled = not Config.DesyncEnabled
-        if Config.DesyncEnabled then
-            DesyncEnableBtn.Text = "Desync: ON"
-            DesyncEnableBtn.BackgroundColor3 = Config.BTNSColor
-            enableDesync()
-        else
-            DesyncEnableBtn.Text = "Desync: OFF"
-            DesyncEnableBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-            disableDesync()
-        end
-    end)
-
     local DesyncBtn = Instance.new("TextButton")
     DesyncBtn.Parent = MainFrame
     DesyncBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    DesyncBtn.Position = UDim2.new(0.1, 0, 0.55, 0)
-    DesyncBtn.Size = UDim2.new(0.8, 0, 0.18, 0)
+    DesyncBtn.Position = UDim2.new(0.1, 0, 0.3, 0)
+    DesyncBtn.Size = UDim2.new(0.8, 0, 0.25, 0)
     DesyncBtn.Font = Enum.Font.GothamBold
-    DesyncBtn.Text = "Desync (Reset)"
+    DesyncBtn.Text = "Desync"
     DesyncBtn.TextColor3 = Config.ESPColor
     DesyncBtn.TextSize = 13
+    
     Instance.new("UICorner", DesyncBtn).CornerRadius = UDim.new(0, 6)
-    local ds0 = Instance.new("UIStroke", DesyncBtn)
-    ds0.Color = Config.ESPColor
-    ds0.Thickness = 0.6
-    ds0.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+    local ds = Instance.new("UIStroke", DesyncBtn)
+    ds.Color = Config.ESPColor
+    ds.Thickness = 0.6
+    ds.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
     DesyncBtn.MouseButton1Click:Connect(function()
-        DesyncBtn.Text = "Resetting..."
+        DesyncBtn.Text = "Desyinc..."
+        setFlags()
         respawn(player)
         task.wait(5.1)
-        DesyncBtn.Text = "Desync (Reset)"
+        DesyncBtn.Text = "Desync"
     end)
 
     local AnimBtn = Instance.new("TextButton")
     AnimBtn.Parent = MainFrame
     AnimBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    AnimBtn.Position = UDim2.new(0.1, 0, 0.78, 0)
-    AnimBtn.Size = UDim2.new(0.8, 0, 0.18, 0)
+    AnimBtn.Position = UDim2.new(0.1, 0, 0.6, 0)
+    AnimBtn.Size = UDim2.new(0.8, 0, 0.25, 0)
     AnimBtn.Font = Enum.Font.GothamBold
     AnimBtn.Text = "Disable Animations"
     AnimBtn.TextColor3 = Config.ESPColor
     AnimBtn.TextSize = 13
+    
     Instance.new("UICorner", AnimBtn).CornerRadius = UDim.new(0, 6)
+
     local as = Instance.new("UIStroke", AnimBtn)
     as.Color = Config.ESPColor
     as.Thickness = 0.6
     as.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
     AnimBtn.MouseButton1Click:Connect(function()
         Config.AnimDisable = not Config.AnimDisable
-
+        
         if Config.AnimDisable then
             AnimBtn.BackgroundColor3 = Config.BTNSColor
             toggleAnimLoop(true)
@@ -339,21 +496,25 @@ local function CreateGUI()
             toggleAnimLoop(false)
         end
     end)
-
+            
     local dragging, dragInput, dragStart, startPos
     MainFrame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true; dragStart = input.Position; startPos = MainFrame.Position
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then dragging = false end
             end)
         end
     end)
+
     MainFrame.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
+
     UserInputService.InputChanged:Connect(function(input)
         if dragging and input == dragInput then
             local delta = input.Position - dragStart
@@ -362,18 +523,10 @@ local function CreateGUI()
     end)
 end
 
--- Vừa load: mặc định OFF
-setFlagWorldStepMaxOff()
-Config.DesyncEnabled = false
-disableDesync()
 
 player.CharacterAdded:Connect(function()
     task.wait(0.2)
-    if Config.DesyncEnabled then
-        enableDesync()
-    else
-        disableDesync()
-    end
+    initializeESP()
     if Config.AnimDisable then
         task.wait(0.5)
         cacheOriginalAnimations()
@@ -381,12 +534,8 @@ player.CharacterAdded:Connect(function()
 end)
 
 RunService.RenderStepped:Connect(function()
-    if not Config.DesyncEnabled then
-        -- Khi OFF: ESP luôn luôn theo vị trí thật (server side), không fake pos
-        if fakePosESP and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            fakePosESP.CFrame = player.Character.HumanoidRootPart.CFrame
-        end
-    end
+    trackServerPosition()
+    updateESP()
 end)
 
 CreateGUI()
